@@ -1,1 +1,1 @@
-web: gunicorn detergee.wsgi:application 
+web: gunicorn detergee.wsgi:application --bind 0.0.0.0:$PORT 
