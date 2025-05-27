@@ -100,8 +100,15 @@ WSGI_APPLICATION = 'detergee.wsgi.application'
 DATABASES = {
     'default': dj_database_url.config(
         default='sqlite:///db.sqlite3',
-        conn_max_age=600
+        conn_max_age=600,
+        ssl_require=True
     )
+}
+
+# Database connection settings
+DATABASES['default']['CONN_MAX_AGE'] = 600
+DATABASES['default']['OPTIONS'] = {
+    'connect_timeout': 10,
 }
 
 
