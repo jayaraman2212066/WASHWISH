@@ -1,1 +1,1 @@
-web: gunicorn detergee.wsgi --log-file - 
+web: gunicorn detergee.wsgi:application 
