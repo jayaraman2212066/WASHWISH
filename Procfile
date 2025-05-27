@@ -1,0 +1,1 @@
+web: gunicorn detergee.wsgi --log-file - 
