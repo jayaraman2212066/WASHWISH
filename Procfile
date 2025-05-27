@@ -1,2 +1,2 @@
-release: if [ -n "$DATABASE_URL" ] || [ -n "$PGDATABASE" ]; then python manage.py migrate; fi
-web: gunicorn detergee.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --timeout 120 --access-logfile - --error-logfile - --log-level info 
+release: python manage.py collectstatic --noinput && if [ -n "$DATABASE_URL" ] || [ -n "$PGDATABASE" ]; then python manage.py migrate; fi
+web: gunicorn detergee.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --timeout 120 --access-logfile - --error-logfile - --log-level debug --capture-output 
