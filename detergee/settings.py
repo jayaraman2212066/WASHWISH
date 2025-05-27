@@ -31,7 +31,9 @@ ALLOWED_HOSTS = [
     'washwish.railway.app',
     'washwish-production.up.railway.app',
     'localhost',
-    '127.0.0.1'
+    '127.0.0.1',
+    '.railway.app',  # Allow all Railway subdomains
+    '.up.railway.app',  # Allow all Railway production domains
 ]
 
 # CORS settings
@@ -46,10 +48,10 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS = True  # For development
 
-# Security settings
-SECURE_SSL_REDIRECT = not DEBUG
-SESSION_COOKIE_SECURE = not DEBUG
-CSRF_COOKIE_SECURE = not DEBUG
+# Security settings - temporarily disable some security features for deployment
+SECURE_SSL_REDIRECT = False  # Temporarily disable SSL redirect
+SESSION_COOKIE_SECURE = False  # Temporarily disable secure cookies
+CSRF_COOKIE_SECURE = False  # Temporarily disable secure CSRF cookies
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
