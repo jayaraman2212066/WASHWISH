@@ -197,7 +197,7 @@ STATICFILES_DIRS = [
 ]
 
 # WhiteNoise configuration
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Media files configuration
 MEDIA_URL = '/media/'
@@ -206,6 +206,17 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Ensure the static and media directories exist
 os.makedirs(STATIC_ROOT, exist_ok=True)
 os.makedirs(MEDIA_ROOT, exist_ok=True)
+
+# Create a default static directory structure if it doesn't exist
+DEFAULT_STATIC_DIRS = {
+    'img/logo': [],
+    'css': [],
+    'js': [],
+}
+
+for dir_path, files in DEFAULT_STATIC_DIRS.items():
+    full_path = os.path.join(BASE_DIR, 'static', dir_path)
+    os.makedirs(full_path, exist_ok=True)
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
