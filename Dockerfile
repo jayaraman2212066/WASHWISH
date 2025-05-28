@@ -15,6 +15,17 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the application
 COPY . .
 
+# Create required directories
+RUN mkdir -p static/img/slider static/img/logo static/css static/js static/img/gallery static/img/icon
+
+# Copy static files
+COPY static/img/slider/* static/img/slider/
+COPY static/img/logo/* static/img/logo/
+COPY static/css/* static/css/
+COPY static/js/* static/js/
+COPY static/img/gallery/* static/img/gallery/
+COPY static/img/icon/* static/img/icon/
+
 # Collect static files
 RUN python manage.py collectstatic --noinput
 

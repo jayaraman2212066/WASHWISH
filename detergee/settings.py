@@ -199,10 +199,11 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'frontend_static'),
 ]
 
 # WhiteNoise configuration
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Media files configuration
 MEDIA_URL = '/media/'
@@ -212,14 +213,17 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 os.makedirs(STATIC_ROOT, exist_ok=True)
 os.makedirs(MEDIA_ROOT, exist_ok=True)
 
-# Create a default static directory structure if it doesn't exist
-DEFAULT_STATIC_DIRS = {
-    'img/logo': [],
-    'css': [],
-    'js': [],
-}
+# Create required static directories
+REQUIRED_STATIC_DIRS = [
+    'img/slider',
+    'img/logo',
+    'css',
+    'js',
+    'img/gallery',
+    'img/icon',
+]
 
-for dir_path, files in DEFAULT_STATIC_DIRS.items():
+for dir_path in REQUIRED_STATIC_DIRS:
     full_path = os.path.join(BASE_DIR, 'static', dir_path)
     os.makedirs(full_path, exist_ok=True)
 
