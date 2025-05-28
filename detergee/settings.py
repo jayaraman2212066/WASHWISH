@@ -227,6 +227,19 @@ for dir_path in REQUIRED_STATIC_DIRS:
     full_path = os.path.join(BASE_DIR, 'static', dir_path)
     os.makedirs(full_path, exist_ok=True)
 
+# Copy static files from frontend_static if they don't exist
+FRONTEND_STATIC_DIR = os.path.join(BASE_DIR, 'frontend_static')
+if os.path.exists(FRONTEND_STATIC_DIR):
+    for root, dirs, files in os.walk(FRONTEND_STATIC_DIR):
+        for file in files:
+            src_path = os.path.join(root, file)
+            rel_path = os.path.relpath(src_path, FRONTEND_STATIC_DIR)
+            dst_path = os.path.join(STATIC_ROOT, rel_path)
+            os.makedirs(os.path.dirname(dst_path), exist_ok=True)
+            if not os.path.exists(dst_path):
+                import shutil
+                shutil.copy2(src_path, dst_path)
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Security settings for production

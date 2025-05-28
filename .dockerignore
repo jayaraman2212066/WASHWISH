@@ -8,4 +8,7 @@ venv/
 .venv/
 db.sqlite3
 media/
-staticfiles/ 
+staticfiles/
+SECRET_KEY=django-insecure-washwish-secret-key-2024
+DEBUG=false
+ALLOWED_HOSTS=washwish-production.up.railway.app,washwish.web.app 
