@@ -5,12 +5,39 @@
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**"
+      "**/node_modules/**",
+      "**/venv/**",
+      "**/.venv/**",
+      "**/db.sqlite3",
+      "**/manage.py",
+      "**/requirements.txt",
+      "**/runtime.txt",
+      "**/Procfile"
     ],
     "rewrites": [
       {
+        "source": "/static/**",
+        "destination": "/static/**"
+      },
+      {
+        "source": "/media/**",
+        "destination": "/media/**"
+      },
+      {
         "source": "/api/**",
         "destination": "https://washwish-backend.onrender.com/api/**"
+      },
+      {
+        "source": "/services/**",
+        "destination": "https://washwish-backend.onrender.com/services/**"
+      },
+      {
+        "source": "/accounts/**",
+        "destination": "https://washwish-backend.onrender.com/accounts/**"
+      },
+      {
+        "source": "/admin/**",
+        "destination": "https://washwish-backend.onrender.com/admin/**"
       },
       {
         "source": "**",
@@ -20,6 +47,15 @@
     "headers": [
       {
         "source": "**/*.@(js|css)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "max-age=31536000"
+          }
+        ]
+      },
+      {
+        "source": "**/*.@(jpg|jpeg|gif|png|svg|webp)",
         "headers": [
           {
             "key": "Cache-Control",
