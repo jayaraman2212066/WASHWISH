@@ -25,19 +25,19 @@
       },
       {
         "source": "/api/**",
-        "destination": "https://washwish-backend.onrender.com/api/**"
+        "destination": "https://washwish-production.up.railway.app/api/**"
       },
       {
         "source": "/services/**",
-        "destination": "https://washwish-backend.onrender.com/services/**"
+        "destination": "https://washwish-production.up.railway.app/services/**"
       },
       {
         "source": "/accounts/**",
-        "destination": "https://washwish-backend.onrender.com/accounts/**"
+        "destination": "https://washwish-production.up.railway.app/accounts/**"
       },
       {
         "source": "/admin/**",
-        "destination": "https://washwish-backend.onrender.com/admin/**"
+        "destination": "https://washwish-production.up.railway.app/admin/**"
       },
       {
         "source": "**",
@@ -60,6 +60,23 @@
           {
             "key": "Cache-Control",
             "value": "max-age=31536000"
+          }
+        ]
+      },
+      {
+        "source": "**",
+        "headers": [
+          {
+            "key": "Access-Control-Allow-Origin",
+            "value": "*"
+          },
+          {
+            "key": "Access-Control-Allow-Methods",
+            "value": "GET,PUT,POST,DELETE,OPTIONS"
+          },
+          {
+            "key": "Access-Control-Allow-Headers",
+            "value": "Content-Type, Authorization"
           }
         ]
       }

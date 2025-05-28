@@ -1,0 +1,17 @@
+v: 0
+micros:
+  - name: washwish-backend
+    src: .
+    engine: python3.9
+    public: true
+    primary: true
+    commands:
+      start: gunicorn detergee.wsgi
+    env:
+      - SECRET_KEY: ${SECRET_KEY}
+      - DEBUG: "false"
+      - ALLOWED_HOSTS: "washwish.web.app,localhost,127.0.0.1"
+      - DATABASE_URL: ${DATABASE_URL}
+    database:
+      type: postgres
+      version: 14 

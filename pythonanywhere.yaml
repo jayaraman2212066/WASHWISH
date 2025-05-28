@@ -1,0 +1,13 @@
+version: 1
+web_app:
+  name: washwish-backend
+  python_version: 3.9
+  source_code: .
+  virtualenv_path: /home/$USERNAME/washwish-backend/venv
+  requirements_file: requirements.txt
+  wsgi_file: detergee/wsgi.py
+  environment_variables:
+    SECRET_KEY: ${SECRET_KEY}
+    DEBUG: "false"
+    ALLOWED_HOSTS: "washwish.web.app,localhost,127.0.0.1"
+    DATABASE_URL: ${DATABASE_URL} 
