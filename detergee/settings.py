@@ -130,7 +130,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -259,5 +259,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Append slash to URLs
 APPEND_SLASH = False
+
+# WhiteNoise settings
+WHITENOISE_ADD_HEADERS_TO_STATIC_ONLY = True
 
 
