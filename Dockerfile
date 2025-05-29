@@ -21,15 +21,18 @@ RUN mkdir -p static/img/slider static/img/logo static/css static/js static/img/g
     touch static/img/slider/slider-img-2.jpg && \
     touch static/img/slider/slider-img-3.jpg
 
+# Run migrations
+RUN python manage.py migrate --noinput
+
+# Collect static files
+RUN python manage.py collectstatic --noinput
+
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 ENV PORT=8080
 ENV DJANGO_SETTINGS_MODULE=detergee.settings
 ENV DEBUG=false
 ENV ALLOWED_HOSTS=washwish-production.up.railway.app
-
-# Run migrations and collect static files
-RUN python manage.py collectstatic --noinput
 
 # Run the application
 CMD gunicorn detergee.wsgi --bind 0.0.0.0:$PORT --workers 3 --threads 2 --timeout 120 --access-logfile - --error-logfile - --log-level info 
