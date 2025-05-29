@@ -60,6 +60,7 @@ LOGGING = {
 CORS_ALLOWED_ORIGINS = [
     "https://washwish.railway.app",
     "https://washwish-production.up.railway.app",
+    "https://healthcheck.railway.app",
 ]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS = False
