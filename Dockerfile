@@ -23,7 +23,7 @@ RUN mkdir -p static/img/slider static/img/logo static/css static/js static/img/g
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
-ENV PORT=8000
+ENV PORT=8080
 ENV DJANGO_SETTINGS_MODULE=detergee.settings
 ENV DEBUG=false
 ENV ALLOWED_HOSTS=washwish-production.up.railway.app
@@ -32,4 +32,4 @@ ENV ALLOWED_HOSTS=washwish-production.up.railway.app
 RUN python manage.py collectstatic --noinput
 
 # Run the application
-CMD gunicorn detergee.wsgi --bind 0.0.0.0:$PORT --workers 3 --threads 2 
+CMD gunicorn detergee.wsgi --bind 0.0.0.0:$PORT --workers 3 --threads 2 --timeout 120 --access-logfile - --error-logfile - --log-level info 
