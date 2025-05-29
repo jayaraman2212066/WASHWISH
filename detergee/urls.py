@@ -18,10 +18,10 @@ from django.urls import path, include, re_path
 from . import views
 
 urlpatterns = [
+    re_path(r'^health/?$', views.health_check, name='health_check'),
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('about/', views.about, name='about'),
-    re_path(r'^health/?$', views.health_check, name='health_check'),
     path('services/', include('services.urls')),
     path('accounts/', include('accounts.urls')),
 ]
