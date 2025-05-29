@@ -45,7 +45,7 @@
                             <nav> 
                                 <ul id="navigation">                                                                                          
                                     <li><a href="{% url 'index' %}">Home</a></li>
-                                    <li><a href="{% url 'services' %}">Services</a></li>
+                                    <li><a href="{% url 'active' %}">Services</a></li>
                                     {% if user.is_authenticated %}
                                         <li><a href="{% url 'profile' %}">Profile</a></li>
                                         <li><a href="{% url 'logout' %}">Logout</a></li>
@@ -79,7 +79,7 @@
                                 <div class="hero__caption">
                                     <h1 data-animation="fadeInLeft" data-delay="0.2s">Quality laundry service in your city</h1>
                                     <p data-animation="fadeInLeft" data-delay="0.4s">We take care about the cleanliness of your clothes and save your valuable time</p>
-                                    <a href="{% url 'services' %}" class="btn hero-btn" data-animation="fadeInLeft" data-delay="0.7s">Explore Services</a>
+                                    <a href="{% url 'active' %}" class="btn hero-btn" data-animation="fadeInLeft" data-delay="0.7s">Explore Services</a>
                                 </div>
                             </div>
                         </div>
@@ -142,11 +142,11 @@
                     <div class="footer-tittle">
                         <h4>Services </h4>
                         <ul>
-                            <li><a href="{% url 'services' %}">- Dry Cleaning</a></li>
-                            <li><a href="{% url 'services' %}">- Ironing</a></li>
-                            <li><a href="{% url 'services' %}">- Folding</a></li>
-                            <li><a href="{% url 'services' %}">- Stitching</a></li>
-                            <li><a href="{% url 'services' %}">- Be our Regular Customer</a></li>
+                            <li><a href="{% url 'active' %}">- Dry Cleaning</a></li>
+                            <li><a href="{% url 'active' %}">- Ironing</a></li>
+                            <li><a href="{% url 'active' %}">- Folding</a></li>
+                            <li><a href="{% url 'active' %}">- Stitching</a></li>
+                            <li><a href="{% url 'active' %}">- Be our Regular Customer</a></li>
                         </ul>
                     </div>
                 </div>
