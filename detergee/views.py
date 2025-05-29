@@ -13,25 +13,9 @@ def about(request):
     return render(request, "about.html")
 
 def health_check(request):
-    try:
-        # Check database connection
-        with connection.cursor() as cursor:
-            cursor.execute("SELECT 1")
-            db_status = "OK"
-    except Exception as e:
-        db_status = f"Error: {str(e)}"
-
-    # Check environment
-    env_status = {
-        "DEBUG": os.environ.get("DEBUG", "Not set"),
-        "DATABASE_URL": "Set" if os.environ.get("DATABASE_URL") else "Not set",
-        "SECRET_KEY": "Set" if os.environ.get("SECRET_KEY") else "Not set",
-    }
-
+    # Simplified health check
     response_data = {
         "status": "healthy",
-        "database": db_status,
-        "environment": env_status
+        "message": "Application is running"
     }
-
     return JsonResponse(response_data)
