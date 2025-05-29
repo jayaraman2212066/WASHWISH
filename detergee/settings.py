@@ -257,4 +257,7 @@ if os.path.exists(FRONTEND_STATIC_DIR):
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Append slash to URLs
+APPEND_SLASH = False
+
 
