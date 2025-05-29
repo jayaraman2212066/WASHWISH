@@ -5,8 +5,8 @@
     "dockerfilePath": "Dockerfile"
   },
   "deploy": {
-    "startCommand": "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn detergee.wsgi",
-    "healthcheckPath": "/",
+    "startCommand": "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn detergee.wsgi --bind 0.0.0.0:$PORT --workers 3 --threads 2",
+    "healthcheckPath": "/health/",
     "healthcheckTimeout": 100,
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10

@@ -15,20 +15,18 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the application
 COPY . .
 
-# Create required directories and copy static files
-RUN mkdir -p static/img/slider static/img/logo static/css static/js static/img/gallery static/img/icon && \
-    cp -r frontend_static/* static/ && \
-    cp -r staticfiles/* static/ || true
+# Create required directories
+RUN mkdir -p static/img/slider static/img/logo static/css static/js static/img/gallery static/img/icon media
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 ENV PORT=8000
 ENV DJANGO_SETTINGS_MODULE=detergee.settings
 ENV DEBUG=false
-ENV ALLOWED_HOSTS=washwish-production.up.railway.app,washwish.web.app
+ENV ALLOWED_HOSTS=washwish-production.up.railway.app
 
 # Run migrations and collect static files
 RUN python manage.py collectstatic --noinput --clear
 
 # Run the application
-CMD gunicorn detergee.wsgi --bind 0.0.0.0:$PORT 
+CMD gunicorn detergee.wsgi --bind 0.0.0.0:$PORT --workers 3 --threads 2 
