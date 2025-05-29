@@ -69,10 +69,9 @@
         <!-- Header End -->
     </header>
     <main>
-        <!--? slider Area Start-->
-        <section class="slider-area hero-overly">
+        {% block content %}
+        <section class="slider-area hero-overly" style="background-color: #f8f9fa;">
             <div class="slider-active">
-                <!-- Single Slider -->
                 <div class="single-slider slider-height d-flex align-items-center">
                     <div class="container">
                         <div class="row">
@@ -81,7 +80,6 @@
                                     <h1 data-animation="fadeInLeft" data-delay="0.2s">Quality laundry service in your city</h1>
                                     <p data-animation="fadeInLeft" data-delay="0.4s">We take care about the cleanliness of your clothes and save your valuable time</p>
                                     <a href="{% url 'services' %}" class="btn hero-btn" data-animation="fadeInLeft" data-delay="0.7s">Explore Services</a>
-                                    <br>
                                 </div>
                             </div>
                         </div>
@@ -89,7 +87,7 @@
                 </div>
             </div>
         </section>
-        <!-- slider Area End-->
+        {% endblock %}
         <!--? Want To work -->
         <section class="container services-area pt-top border-bottom pb-20 mb-60">
             <section class="wantToWork-area" data-background="static/img/gallery/section_bg01.png">

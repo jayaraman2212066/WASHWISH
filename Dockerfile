@@ -15,8 +15,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the application
 COPY . .
 
-# Create required directories
-RUN mkdir -p static/img/slider static/img/logo static/css static/js static/img/gallery static/img/icon media
+# Create required directories and ensure they exist
+RUN mkdir -p static/img/slider static/img/logo static/css static/js static/img/gallery static/img/icon media && \
+    touch static/img/slider/slider-img-1.jpg && \
+    touch static/img/slider/slider-img-2.jpg && \
+    touch static/img/slider/slider-img-3.jpg
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
@@ -26,7 +29,7 @@ ENV DEBUG=false
 ENV ALLOWED_HOSTS=washwish-production.up.railway.app
 
 # Run migrations and collect static files
-RUN python manage.py collectstatic --noinput --clear
+RUN python manage.py collectstatic --noinput
 
 # Run the application
 CMD gunicorn detergee.wsgi --bind 0.0.0.0:$PORT --workers 3 --threads 2 
