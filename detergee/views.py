@@ -19,3 +19,7 @@ def health_check(request):
         "message": "Application is running"
     }
     return JsonResponse(response_data)
+
+# New simple status check view
+def status_check(request):
+    return JsonResponse({"status": "ok"})

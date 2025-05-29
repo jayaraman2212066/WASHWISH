@@ -19,6 +19,7 @@ from . import views
 
 urlpatterns = [
     re_path(r'^health/?$', views.health_check, name='health_check'),
+    re_path(r'^status/?$', views.status_check, name='status_check'),
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('about/', views.about, name='about'),
