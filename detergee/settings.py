@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'ki-45px(3d%o(sxdd3(55@6uru6jxu27+d6n-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'washwish.railway.app,washwish-production.up.railway.app,localhost,127.0.0.1,.railway.app,.up.railway.app,healthcheck.railway.app,*').split(',')
+ALLOWED_HOSTS = ['*']  # Temporarily allow all hosts
 
 # Logging configuration
 LOGGING = {
@@ -63,20 +63,20 @@ CORS_ALLOWED_ORIGINS = [
     "https://healthcheck.railway.app",
 ]
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_ALL_ORIGINS = True  # Temporarily allow all origins
 
 # Security settings
 if not DEBUG:
-    # SECURE_SSL_REDIRECT = True  # Temporarily disabled for health check debugging
+    # Temporarily disable security settings for debugging
     SECURE_SSL_REDIRECT = False
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    SECURE_BROWSER_XSS_FILTER = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    X_FRAME_OPTIONS = 'DENY'
-    SECURE_HSTS_SECONDS = 31536000  # 1 year
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+    SECURE_BROWSER_XSS_FILTER = False
+    SECURE_CONTENT_TYPE_NOSNIFF = False
+    X_FRAME_OPTIONS = 'SAMEORIGIN'
+    SECURE_HSTS_SECONDS = 0
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+    SECURE_HSTS_PRELOAD = False
 else:
     SECURE_SSL_REDIRECT = False
     SESSION_COOKIE_SECURE = False
