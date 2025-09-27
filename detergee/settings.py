@@ -30,7 +30,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'ki-45px(3d%o(sxdd3(55@6uru6jxu27+d6n-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = ['*']
 
 # Logging configuration
 LOGGING = {
@@ -216,19 +216,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 os.makedirs(STATIC_ROOT, exist_ok=True)
 os.makedirs(MEDIA_ROOT, exist_ok=True)
 
-# Create required static directories
-REQUIRED_STATIC_DIRS = [
-    'img/slider',
-    'img/logo',
-    'css',
-    'js',
-    'img/gallery',
-    'img/icon',
-]
 
-for dir_path in REQUIRED_STATIC_DIRS:
-    full_path = os.path.join(BASE_DIR, 'static', dir_path)
-    os.makedirs(full_path, exist_ok=True)
 
 
 
