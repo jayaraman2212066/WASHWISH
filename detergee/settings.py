@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,7 +30,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'ki-45px(3d%o(sxdd3(55@6uru6jxu27+d6n-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['*']  # Temporarily allow all hosts
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 # Logging configuration
 LOGGING = {
@@ -57,30 +60,20 @@ LOGGING = {
 }
 
 # CORS settings
-CORS_ALLOWED_ORIGINS = [
-    "https://washwish.railway.app",
-    "https://washwish-production.up.railway.app",
-    "https://healthcheck.railway.app",
-]
+CORS_ALLOW_ALL_ORIGINS = DEBUG
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_ALL_ORIGINS = True  # Temporarily allow all origins
 
 # Security settings
 if not DEBUG:
-    # Temporarily disable security settings for debugging
-    SECURE_SSL_REDIRECT = False
-    SESSION_COOKIE_SECURE = False
-    CSRF_COOKIE_SECURE = False
-    SECURE_BROWSER_XSS_FILTER = False
-    SECURE_CONTENT_TYPE_NOSNIFF = False
-    X_FRAME_OPTIONS = 'SAMEORIGIN'
-    SECURE_HSTS_SECONDS = 0
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = False
-    SECURE_HSTS_PRELOAD = False
-else:
-    SECURE_SSL_REDIRECT = False
-    SESSION_COOKIE_SECURE = False
-    CSRF_COOKIE_SECURE = False
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = 'DENY'
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
 
 # Add CORS headers
 CORS_ALLOW_HEADERS = [
@@ -237,18 +230,7 @@ for dir_path in REQUIRED_STATIC_DIRS:
     full_path = os.path.join(BASE_DIR, 'static', dir_path)
     os.makedirs(full_path, exist_ok=True)
 
-# Copy static files from frontend_static if they don't exist
-FRONTEND_STATIC_DIR = os.path.join(BASE_DIR, 'frontend_static')
-if os.path.exists(FRONTEND_STATIC_DIR):
-    for root, dirs, files in os.walk(FRONTEND_STATIC_DIR):
-        for file in files:
-            src_path = os.path.join(root, file)
-            rel_path = os.path.relpath(src_path, FRONTEND_STATIC_DIR)
-            dst_path = os.path.join(STATIC_ROOT, rel_path)
-            os.makedirs(os.path.dirname(dst_path), exist_ok=True)
-            if not os.path.exists(dst_path):
-                import shutil
-                shutil.copy2(src_path, dst_path)
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

@@ -1,17 +1,21 @@
 services:
   - type: web
-    name: washwish-backend
+    name: washwish
     env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn detergee.wsgi
+    buildCommand: |
+      pip install -r requirements.txt
+      python manage.py collectstatic --noinput
+      python manage.py migrate
+    startCommand: gunicorn detergee.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: SECRET_KEY
         generateValue: true
       - key: DEBUG
-        value: "false"
-      - key: ALLOWED_HOSTS
-        value: "washwish.web.app,localhost,127.0.0.1"
-      - key: DATABASE_URL
-        fromDatabase:
-          name: washwish-db
-          property: connectionString 
+        value: "False"
+      - key: PYTHON_VERSION
+        value: "3.9.18"
+
+databases:
+  - name: washwish-db
+    databaseName: washwish
+    user: washwish
