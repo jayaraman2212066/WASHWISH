@@ -18,9 +18,16 @@ def newlaundry(request):
             date = datetime.datetime.now()
             clothtype = request.POST.get('clothtype')
             no = request.POST.get('noofclothes')
-            noofclothes=int(no)
+            try:
+                noofclothes = int(no) if no else 0
+            except ValueError:
+                noofclothes = 0
             servicetypes = request.POST.get('servicetype')
-            ser=ServiceType.objects.get(id=servicetypes)
+            try:
+                ser = ServiceType.objects.get(id=servicetypes)
+            except (ServiceType.DoesNotExist, ValueError):
+                messages.error(request, 'Invalid service type selected')
+                return redirect('newlaundry')
             cost = ser.price
             servicetyname=ser.servicetypes
             serviceid = ser.id

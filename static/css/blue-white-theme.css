@@ -1,0 +1,291 @@
+/* Blue & White Laundry Theme */
+:root {
+    --primary-blue: #2563eb;
+    --dark-blue: #1e40af;
+    --light-blue: #60a5fa;
+    --white: #ffffff;
+    --light-gray: #f8fafc;
+    --bubble-blue: rgba(37, 99, 235, 0.3);
+}
+
+/* Dynamic Blue Background with Bubbles */
+body {
+    background: linear-gradient(135deg, #ffffff 0%, #e0f2fe 25%, #2563eb 50%, #1e40af 75%, #ffffff 100%);
+    background-size: 400% 400%;
+    animation: blueWave 25s ease infinite;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Flying Bubbles Animation */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 80%, var(--bubble-blue) 2px, transparent 2px),
+        radial-gradient(circle at 80% 20%, rgba(96, 165, 250, 0.4) 1px, transparent 1px),
+        radial-gradient(circle at 40% 40%, var(--bubble-blue) 1px, transparent 1px),
+        radial-gradient(circle at 60% 90%, rgba(37, 99, 235, 0.2) 3px, transparent 3px),
+        radial-gradient(circle at 90% 60%, var(--bubble-blue) 2px, transparent 2px);
+    background-size: 200px 200px, 150px 150px, 100px 100px, 250px 250px, 180px 180px;
+    animation: bubbleFloat 20s linear infinite;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.6;
+}
+
+@keyframes blueWave {
+    0% { background-position: 0% 50%; }
+    25% { background-position: 100% 25%; }
+    50% { background-position: 100% 75%; }
+    75% { background-position: 0% 75%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes bubbleFloat {
+    0% { transform: translateY(0px) rotate(0deg); }
+    100% { transform: translateY(-100vh) rotate(360deg); }
+}
+
+/* Curved Fillets for All Elements */
+.header-area, .services-area, .wantToWork-area, .container, .wrapper, 
+.table, .btn, .form-control, input, select, textarea, .card, 
+#sidebar, .footer-area {
+    border-radius: 25px !important;
+    box-shadow: 0 8px 32px rgba(37, 99, 235, 0.15);
+}
+
+/* Header Styling */
+.header-area {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    border-bottom: 3px solid var(--primary-blue);
+    border-radius: 0 0 25px 25px !important;
+}
+
+.main-menu nav ul li a {
+    color: var(--primary-blue) !important;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.main-menu nav ul li a:hover {
+    color: var(--dark-blue) !important;
+    text-shadow: 0 0 10px var(--light-blue);
+}
+
+/* Buttons with Curved Design */
+.btn, .header-btn2 {
+    background: linear-gradient(45deg, var(--primary-blue), var(--light-blue));
+    border: none;
+    color: white;
+    padding: 15px 35px;
+    border-radius: 30px;
+    font-weight: 600;
+    transition: all 0.4s ease;
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before, .header-btn2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+.btn:hover::before, .header-btn2:hover::before {
+    left: 100%;
+}
+
+.btn:hover, .header-btn2:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(37, 99, 235, 0.6);
+    background: linear-gradient(45deg, var(--dark-blue), var(--primary-blue));
+}
+
+/* Cards & Sections with Curved Corners */
+.services-area, .wantToWork-area, .container, .wrapper {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(15px);
+    border-radius: 30px;
+    margin: 25px 0;
+    border: 2px solid var(--light-blue);
+    box-shadow: 0 12px 40px rgba(37, 99, 235, 0.2);
+    position: relative;
+}
+
+/* Glowing Border Animation */
+.services-area::after, .wantToWork-area::after {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    background: linear-gradient(45deg, var(--primary-blue), var(--light-blue), var(--primary-blue));
+    border-radius: 33px;
+    z-index: -1;
+    animation: borderPulse 4s ease-in-out infinite alternate;
+}
+
+@keyframes borderPulse {
+    0% { opacity: 0.5; transform: scale(1); }
+    100% { opacity: 1; transform: scale(1.02); }
+}
+
+/* Forms with Curved Design */
+.form-control, input, select, textarea {
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid var(--light-blue);
+    color: var(--dark-blue);
+    border-radius: 20px;
+    padding: 12px 20px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, input:focus, select:focus, textarea:focus {
+    background: rgba(255, 255, 255, 1);
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
+    color: var(--dark-blue);
+}
+
+/* Tables with Curved Design */
+.table {
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--dark-blue);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.2);
+}
+
+.table th {
+    background: var(--primary-blue);
+    border-color: var(--dark-blue);
+    color: white;
+    font-weight: 600;
+    padding: 15px;
+}
+
+.table td {
+    border-color: var(--light-blue);
+    background: rgba(255, 255, 255, 0.8);
+    padding: 12px 15px;
+}
+
+.table-hover tbody tr:hover {
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--dark-blue);
+}
+
+/* Sidebar with Curved Design */
+#sidebar {
+    background: rgba(255, 255, 255, 0.95);
+    border-right: 4px solid var(--primary-blue);
+    box-shadow: 8px 0 25px rgba(37, 99, 235, 0.2);
+    border-radius: 0 30px 30px 0;
+}
+
+#sidebar ul li a {
+    color: var(--primary-blue);
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+    border-radius: 0 20px 20px 0;
+    margin: 5px 0;
+}
+
+#sidebar ul li a:hover, #sidebar ul li.active a {
+    background: var(--primary-blue);
+    color: white;
+    border-left: 4px solid var(--light-blue);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* Footer with Curved Design */
+.footer-area {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    border-top: 3px solid var(--primary-blue);
+    border-radius: 30px 30px 0 0;
+}
+
+.footer-tittle h4 {
+    color: var(--primary-blue);
+}
+
+.footer-pera p, .footer-tittle ul li a {
+    color: var(--dark-blue);
+    transition: all 0.3s ease;
+}
+
+.footer-tittle ul li a:hover {
+    color: var(--light-blue);
+    text-decoration: none;
+}
+
+/* Text Colors */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--primary-blue) !important;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+p, span, li, label {
+    color: var(--dark-blue) !important;
+}
+
+/* Hero Section */
+.hero__caption h1 {
+    color: var(--primary-blue);
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
+    font-weight: 700;
+}
+
+.hero__caption p {
+    color: var(--dark-blue);
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.6);
+}
+
+/* Login/Register Forms */
+.form-container {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 25px;
+    box-shadow: 0 15px 35px rgba(37, 99, 235, 0.3);
+}
+
+.overlay {
+    background: linear-gradient(45deg, var(--primary-blue), var(--light-blue));
+    border-radius: 25px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    body {
+        background-size: 600% 600%;
+    }
+    
+    body::before {
+        background-size: 150px 150px, 100px 100px, 80px 80px, 180px 180px, 120px 120px;
+    }
+    
+    .btn, .header-btn2 {
+        padding: 12px 25px;
+        font-size: 14px;
+        border-radius: 25px;
+    }
+    
+    .services-area, .wantToWork-area {
+        margin: 15px;
+        border-radius: 20px;
+    }
+}

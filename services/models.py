@@ -5,10 +5,16 @@ from django.contrib.auth.models import User
 
 class ClothType(models.Model):
     clothtypes = models.CharField(max_length=25)
+    
+    def __str__(self):
+        return self.clothtypes
 
 class ServiceType(models.Model):
     servicetypes = models.CharField(max_length=25)
     price = models.IntegerField()
+    
+    def __str__(self):
+        return f"{self.servicetypes} - ₹{self.price}"
 
 class Address(models.Model):
     address = models.CharField(max_length=250)
@@ -20,6 +26,9 @@ class OrderNumber(models.Model):
 
 class Status(models.Model):
     status = models.CharField(max_length=25)
+    
+    def __str__(self):
+        return self.status
 
 class Orders(models.Model):
     date = models.DateTimeField()
