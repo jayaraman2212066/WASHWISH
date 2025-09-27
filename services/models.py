@@ -18,10 +18,10 @@ class ServiceType(models.Model):
 
 class Address(models.Model):
     address = models.CharField(max_length=250)
-    userid = models.ForeignKey(User,default=None,on_delete=models.DO_NOTHING)
+    userid = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class OrderNumber(models.Model):
-    userid = models.ForeignKey(User,default=None,on_delete=models.DO_NOTHING)
+    userid = models.ForeignKey(User, on_delete=models.CASCADE)
     orders = models.IntegerField(default=0)
 
 class Status(models.Model):
@@ -37,11 +37,11 @@ class Orders(models.Model):
     cost = models.IntegerField(default=0)
     discound = models.IntegerField(default=0)
     totalcost = models.IntegerField(default=0)
-    statusid = models.ForeignKey(Status,default=None,on_delete=models.DO_NOTHING)
+    statusid = models.ForeignKey(Status, on_delete=models.PROTECT)
     servicetypes = models.CharField(max_length=25,default=0)
     homedelivery = models.BooleanField(default=False)
-    serviceid = models.ForeignKey(ServiceType,default=None,on_delete=models.DO_NOTHING)
-    userid = models.ForeignKey(User,default=None,on_delete=models.DO_NOTHING)
+    serviceid = models.ForeignKey(ServiceType, on_delete=models.PROTECT)
+    userid = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Discounds(models.Model):
     discounds = models.IntegerField(default=0)
@@ -49,8 +49,8 @@ class Discounds(models.Model):
 
 class Payment(models.Model):
     payed = models.BooleanField()
-    orderid = models.ForeignKey(Orders,default=None,on_delete=models.DO_NOTHING)
+    orderid = models.ForeignKey(Orders, on_delete=models.CASCADE)
 
 class Feedback(models.Model):
-    userid = models.ForeignKey(User,default=None,on_delete=models.DO_NOTHING)
+    userid = models.ForeignKey(User, on_delete=models.CASCADE)
     message = models.CharField(max_length=500,default=0)
