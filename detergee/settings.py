@@ -137,6 +137,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'detergee.context_processors.contact_info',
             ],
         },
     },
@@ -236,5 +237,12 @@ APPEND_SLASH = False
 
 # WhiteNoise settings
 WHITENOISE_ADD_HEADERS_TO_STATIC_ONLY = True
+
+# Contact Information
+CONTACT_INFO = {
+    'name': 'Jayaraman K',
+    'email': 'jayaramankalidasan@gmail.com',
+    'phone': '+91 6369804386'
+}
 
 

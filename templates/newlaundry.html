@@ -50,6 +50,8 @@
                                     <li><a href="{% url 'services' %}">Services</a></li>
                                      {% if user.is_authenticated %}
                                     <li> Hai, {{user.first_name}}</li>
+                                    {% else %}
+                                    <li><a href="mailto:{{contact_email}}">{{contact_name}}</a></li>
                                     {% endif %}
                                 </ul>
                             </nav>
