@@ -18,6 +18,8 @@ services:
         fromDatabase:
           name: washwish-db
           property: connectionString
+      - key: EMAIL_PASSWORD
+        value: "your-gmail-app-password"
 
 databases:
   - name: washwish-db
