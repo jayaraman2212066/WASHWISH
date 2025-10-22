@@ -6,13 +6,25 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 def index(request):
+    if request.user.is_authenticated and request.user.is_staff:
+        # Admin dashboard with statistics
+        from services.models import Orders, User
+        from django.db.models import Sum, Count
+        
+        context = {
+            'total_users': User.objects.filter(is_staff=False).count(),
+            'total_orders': Orders.objects.count(),
+            'total_revenue': Orders.objects.aggregate(Sum('totalcost'))['totalcost__sum'] or 0,
+            'pending_orders': Orders.objects.exclude(statusid__status='Completed').count(),
+        }
+        return render(request, "admin_dashboard.html", context)
     return render(request, "index.html")
 
 def services(request):
     return render(request, "services.html")
     
 def about(request):
-    return render(request, "about.html")
+    return render(request, "services.html")
 
 def health_check(request):
     # Simplified health check

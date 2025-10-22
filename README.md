@@ -1,22 +1,43 @@
-# WashWish - Laundry Management System
+# 🧺 WashWish - Laundry Management System
 
-A Django-based laundry management system for managing laundry services, orders, and customer accounts.
+[![Django](https://img.shields.io/badge/Django-3.1.7-green.svg)](https://www.djangoproject.com/)
+[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen.svg)]()
 
-## Features
+A comprehensive Django-based laundry management system that digitizes and streamlines laundry service operations. Built with modern web technologies and designed for scalability and user experience.
 
-- User registration and authentication
-- Service management
-- Order tracking
-- Payment processing
-- Admin dashboard
-- Responsive web design
+## 🚀 Features
 
-## Technology Stack
+### Customer Features
+- 👤 **User Registration & Authentication** - Secure account creation and login
+- 🛍️ **Service Booking** - Easy online laundry service booking
+- 📱 **Order Tracking** - Real-time order status updates
+- 💳 **Payment Processing** - Online payment and Cash on Delivery options
+- 🏠 **Home Delivery** - Convenient pickup and delivery service
+- 📧 **Email Notifications** - Automated order confirmations and updates
+- 💬 **Feedback System** - Customer review and rating system
 
-- **Backend**: Django 3.1.7
+### Admin Features
+- 📊 **Admin Dashboard** - Comprehensive business analytics
+- 📈 **Reports & Analytics** - Revenue tracking and business insights
+- 👥 **User Management** - Customer and staff account management
+- 🔄 **Order Management** - Complete order lifecycle management
+- 🎯 **Service Management** - Add/edit laundry services and pricing
+- 🚚 **Delivery Management** - Track and manage home deliveries
+- 💰 **Payment Tracking** - Monitor payment status and collections
+- 🎁 **Discount Management** - Create and manage promotional offers
+
+## 🛠️ Technology Stack
+
+- **Backend**: Django 3.1.7 with Python 3.9+
 - **Database**: PostgreSQL (Production), SQLite (Development)
-- **Frontend**: HTML, CSS, JavaScript, Bootstrap
-- **Deployment**: Render
+- **Frontend**: HTML5, CSS3, JavaScript (ES6+), Bootstrap 4
+- **Authentication**: Django's built-in authentication system
+- **Security**: CSRF protection, XSS prevention, SQL injection protection
+- **Deployment**: Render.com with Docker support
+- **Static Files**: WhiteNoise for efficient static file serving
+- **Email**: SMTP integration for notifications
 
 ## Local Development Setup
 

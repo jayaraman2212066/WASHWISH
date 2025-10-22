@@ -31,59 +31,87 @@
     <h4 class="" style="align-content:center;">
     <h2 class="text-primary" style="margin-top:40px;">service placed</h2>
     </h4>
-    {%if order.discound > 0 %}
-    <span class="badge bg-success rounded-pill" style="font-size:14px;margin-bottom:40px;padding:10px;">Congratulations..You are eligible for discounds</span>
-    {%endif%}
+        {% if order.discound > 0 %}
+        <div class="alert alert-success" role="alert">
+            <i class="fas fa-gift"></i> <strong>Congratulations!</strong> You saved ₹{{ order.discound }} with our discount offer!
+        </div>
+    {% endif %}
 
-    <h5 style="color:green;">Service will be completed tomorrow</h5>
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i> Service will be completed within 24-48 hours
+    </div>
 
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
 
+    <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+        <thead class="table-dark">
+            <tr>                                
+                <th>Order ID</th>
+                <th>Service Type</th>
+                <th>Cloth Type</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Discount</th>
+                <th>Home Delivery</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>#{{ order.id }}</td>
+                <td>{{ order.servicetypes }}</td>
+                <td>{{ order.clothtype }}</td>
+                <td>{{ order.noofclothes }}</td>
+                <td>₹{{ order.cost }}</td>
+                <td>₹{{ order.discound }}</td>
+                <td>
+                    {% if order.homedelivery %}
+                        <span class="badge bg-success">Yes (+₹50)</span>
+                    {% else %}
+                        <span class="badge bg-secondary">No</span>
+                    {% endif %}
+                </td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr class="table-success">
+                <td colspan="6"><strong>Total Amount:</strong></td>
+                <td><strong>₹{{ order.totalcost }}</strong></td>
+            </tr>
+        </tfoot>
+    </table>
 
-    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                        <thead>
-                            <tr>                                
-                                <th class="table-class">Order ID</th>
-                                <th class="table-class">Servicetype</th>
-                                <th class="table-class">Clothtype</th>
-                                <th class="table-class">No of clothes</th>
-                                <th class="table-class">Cost</th>
-                                <th class="table-class">Discound</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>{{order.id}}</td>
-                                <td>{{order.servicetypes}}</td>
-                                <td>{{order.clothtype}}</td>
-                                <td>{{order.noofclothes}}</td>
-                                <td>{{order.cost}}</td>
-                                <td>{{order.discound}}</td>
-                            </tr>
-                            <tr>
-                            <td><h3>Total cost:</h3></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>{{order.totalcost}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <form method="post" id="cod">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-primary" name="delivery" value="cod">Cash on Delivery</button>
-                    </form>
+    <div class="payment-options mt-4">
+        <h5>Choose Payment Method:</h5>
+        <form method="post" id="cod" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success btn-lg me-3" name="delivery" value="cod">
+                <i class="fas fa-money-bill-wave"></i> Cash on Delivery
+            </button>
+        </form>
+        <button type="button" class="btn btn-primary btn-lg" onclick="showPaymentForm()">
+            <i class="fas fa-credit-card"></i> Pay Online
+        </button>
+    </div>
     </div>
   
   
   
   
-    <div class="container-pay col-6 ">
-    <form method="post" name="validates" id="paid" onsubmit="return validateForm()" >
-    {% csrf_token %}
-    <div class="card-details">
-            <h3 class="title">Enter Card Details to Pay</h3>
+    <div class="container-pay col-6" id="payment-form" style="display: none;">
+        <form method="post" name="validates" id="paid" onsubmit="return validateForm()">
+            {% csrf_token %}
+            <div class="card-details">
+                <h3 class="title">Enter Card Details to Pay</h3>
+                <div class="alert alert-warning">
+                    <i class="fas fa-shield-alt"></i> This is a demo payment form. No actual payment will be processed.
+                </div>
             <hr/>
             <div class="row">
               <div class="form-group col-sm-7">
@@ -107,7 +135,12 @@
                 <input id="cvc" name="vatedatecvv" type="number" class="form-control" placeholder="CVV" aria-label="Card Holder" aria-describedby="basic-addon1">
               </div>
 
-                <button type="submit" class="btn btn-primary" name="delivery" value="paid">Pay Now</button>
+                <button type="submit" class="btn btn-primary btn-lg w-100" name="delivery" value="paid">
+                    <i class="fas fa-lock"></i> Pay ₹{{ order.totalcost }} Securely
+                </button>
+                <button type="button" class="btn btn-secondary mt-2 w-100" onclick="hidePaymentForm()">
+                    Cancel
+                </button>
                     
                 
               
@@ -118,58 +151,58 @@
     </div>
                      <!---------------------script for form validation------------------------>
                      
-                        <script>
-                            function validateForm() 
-                            {
-                                    var x = document.forms["validates"]["validatename"].value;
-                                    if (x == "") 
-                                       { alert("Card Holder must be filled out");}
-                                    if(x>=0)
-                                       { alert("Card Holder must be valid");
-                                        return false;}
-                                    
-                                    var x = document.forms["validates"]["validatemonth"].value;
-                                    if (x == "")
-                                        {alert("Month must be filled out");
-                                             return false;}
-                                    if(x>='A'&& x<='Z' || x>='a' && x<='z')
-                                          {  alert("Month number must be number");
-                                            return false;}
-                                    if(x<0 || x>12)
-                                           { alert("Month must be valid");
-                                            return false;}
-                                    
-                                    var x = document.forms["validates"]["validateyear"].value;
-                                    if (x == "") 
-                                        {alert("Year must be filled out");
-                                            return false;}
-                                    if(x>='A'&& x<='Z' || x>='a' && x<='z')
-                                        {  alert("Month number must be number");
-                                            return false;}
-                                    if(x<0 || x>100)
-                                           { alert("Year must be valid");
-                                                return false;}
-                                    
-                                    var x = document.forms["validates"]["validateno"].value;
-                                    if (x == "") 
-                                        {alert("Card number must be filled out");
-                                             return false;}
-                                    if(x>='A'&& x<='Z' || x>='a' && x<='z')
-                                          {  alert("Card number must be number");
-                                            return false;}
-                                    
-                                    var x = document.forms["validates"]["vatedatecvv"].value;
-                                    if (x == "") 
-                                        {alert("CVV must be filled out");
-                                             return false;}
-                                    if(x>='A'&& x<='Z' || x>='a' && x<='z')
-                                       { alert("cvv must be valid");
-                                        return false;}
-                                    if(x<0 || x>1000)
-                                       { alert("cvv not valid");
-                                        return false;}
-                            }
-                        </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function showPaymentForm() {
+            document.getElementById('payment-form').style.display = 'block';
+            document.getElementById('payment-form').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function hidePaymentForm() {
+            document.getElementById('payment-form').style.display = 'none';
+        }
+        
+        function validateForm() {
+            const name = document.forms["validates"]["validatename"].value.trim();
+            const month = document.forms["validates"]["validatemonth"].value;
+            const year = document.forms["validates"]["validateyear"].value;
+            const cardNo = document.forms["validates"]["validateno"].value;
+            const cvv = document.forms["validates"]["vatedatecvv"].value;
+            
+            if (!name) {
+                alert("Card Holder name is required");
+                return false;
+            }
+            
+            if (!/^[a-zA-Z\s]+$/.test(name)) {
+                alert("Card Holder name should contain only letters");
+                return false;
+            }
+            
+            if (!month || month < 1 || month > 12) {
+                alert("Please enter a valid month (1-12)");
+                return false;
+            }
+            
+            const currentYear = new Date().getFullYear() % 100;
+            if (!year || year < currentYear || year > currentYear + 10) {
+                alert("Please enter a valid year");
+                return false;
+            }
+            
+            if (!cardNo || cardNo.length < 13 || cardNo.length > 19) {
+                alert("Please enter a valid card number (13-19 digits)");
+                return false;
+            }
+            
+            if (!cvv || cvv.length < 3 || cvv.length > 4) {
+                alert("Please enter a valid CVV (3-4 digits)");
+                return false;
+            }
+            
+            return confirm("Proceed with payment of ₹{{ order.totalcost }}?");
+        }
+    </script>
 
                      <!----------------------------------------------------------------------->
 

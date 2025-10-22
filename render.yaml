@@ -6,7 +6,8 @@ services:
       pip install -r requirements.txt
       python manage.py collectstatic --noinput
       python manage.py migrate
-    startCommand: gunicorn detergee.wsgi:application
+      python manage.py populate_data
+    startCommand: gunicorn detergee.wsgi:application --bind 0.0.0.0:$PORT --workers 3
     envVars:
       - key: SECRET_KEY
         generateValue: true
@@ -20,8 +21,11 @@ services:
           property: connectionString
       - key: EMAIL_PASSWORD
         value: "your-gmail-app-password"
+      - key: ALLOWED_HOSTS
+        value: "*"
 
 databases:
   - name: washwish-db
     databaseName: washwish
     user: washwish
+    plan: free

@@ -1,37 +1,63 @@
-from datetime import date
-from pickle import FALSE
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User, auth
-from .models import ClothType, Discounds, Feedback, Payment, ServiceType, Address,OrderNumber, Orders, Status
-from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
-import datetime
-import time
+from django.contrib import messages
+from django.utils import timezone
 from django.db.models import Sum
+from django.http import Http404
+from .models import ClothType, Discounds, Feedback, Payment, ServiceType, Address, OrderNumber, Orders, Status
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Create your views here.
 
 
+@login_required
 def newlaundry(request):
-    if request.user.is_authenticated:
-        if request.method=='POST':
-            date = datetime.datetime.now()
-            clothtype = request.POST.get('clothtype')
-            no = request.POST.get('noofclothes')
+    if request.method == 'POST':
+        try:
+            date = timezone.now()
+            clothtype = request.POST.get('clothtype', '').strip()
+            no = request.POST.get('noofclothes', '0')
+            
+            # Validate inputs
+            if not clothtype:
+                messages.error(request, 'Please select a cloth type')
+                return redirect('newlaundry')
+                
             try:
                 noofclothes = int(no) if no else 0
+                if noofclothes <= 0:
+                    messages.error(request, 'Number of clothes must be greater than 0')
+                    return redirect('newlaundry')
             except ValueError:
-                noofclothes = 0
+                messages.error(request, 'Invalid number of clothes')
+                return redirect('newlaundry')
+                
             servicetypes = request.POST.get('servicetype')
+            if not servicetypes:
+                messages.error(request, 'Please select a service type')
+                return redirect('newlaundry')
+                
             try:
-                ser = ServiceType.objects.get(id=servicetypes)
-            except (ServiceType.DoesNotExist, ValueError):
+                ser = get_object_or_404(ServiceType, id=servicetypes)
+            except (ServiceType.DoesNotExist, ValueError, Http404):
                 messages.error(request, 'Invalid service type selected')
                 return redirect('newlaundry')
+                
             cost = ser.price
-            servicetyname=ser.servicetypes
+            servicetyname = ser.servicetypes
             serviceid = ser.id
-            statusid = int(1)
+            
+            # Get first status (should be 'Received')
+            try:
+                first_status = Status.objects.first()
+                statusid = first_status.id if first_status else 1
+            except Status.DoesNotExist:
+                statusid = 1
+                
             userid = request.user.id
             
             if OrderNumber.objects.filter(userid_id=userid).exists():
@@ -70,35 +96,55 @@ def newlaundry(request):
 
             
             return redirect('checkout')
-
-        else:
-            ctypes = ClothType.objects.all()
-            stypes = ServiceType.objects.all()
-            add = Address.objects.filter(userid_id=request.user.id)
-            return render(request,'newlaundry.html', {'ctypes':ctypes,'stypes':stypes,'add':add})
-    else:
-        return redirect("/")
-
-
-def checkout(request):
-
-    order=Orders.objects.last()
-
-    if request.method=='POST':
-        if request.POST.get('delivery') =='paid':
-            ordid = order.id
-            p="True"
-            pay = Payment.objects.create(payed=p,orderid_id=ordid)
-            pay.save()
-            return render(request,'transaction.html')
-        elif request.POST.get('delivery') == 'cod':
-            ordid = order.id
-            p="False"
-            pay = Payment.objects.create(payed=p,orderid_id=ordid)
-            pay.save()
-            return redirect('index')
+            
+        except Exception as e:
+            logger.error(f'Order creation error: {str(e)}')
+            messages.error(request, 'An error occurred while creating your order')
+            return redirect('newlaundry')
     
-    return render(request,'checkout.html',{'order':order})
+    # GET request
+    ctypes = ClothType.objects.all()
+    stypes = ServiceType.objects.all()
+    add = Address.objects.filter(userid_id=request.user.id)
+    return render(request, 'newlaundry.html', {'ctypes': ctypes, 'stypes': stypes, 'add': add})
+
+
+@login_required
+def checkout(request):
+    try:
+        # Get the last order for the current user
+        order = Orders.objects.filter(userid=request.user).last()
+        if not order:
+            messages.error(request, 'No order found')
+            return redirect('newlaundry')
+
+        if request.method == 'POST':
+            payment_method = request.POST.get('delivery')
+            if payment_method == 'paid':
+                ordid = order.id
+                pay, created = Payment.objects.get_or_create(
+                    orderid_id=ordid,
+                    defaults={'payed': True}
+                )
+                if not created:
+                    pay.payed = True
+                    pay.save()
+                messages.success(request, 'Payment processed successfully')
+                return render(request, 'transaction.html', {'order': order})
+            elif payment_method == 'cod':
+                ordid = order.id
+                pay, created = Payment.objects.get_or_create(
+                    orderid_id=ordid,
+                    defaults={'payed': False}
+                )
+                messages.success(request, 'Order placed successfully with Cash on Delivery')
+                return redirect('index')
+        
+        return render(request, 'checkout.html', {'order': order})
+    except Exception as e:
+        logger.error(f'Checkout error: {str(e)}')
+        messages.error(request, 'An error occurred during checkout')
+        return redirect('newlaundry')
 
 
 def transaction(request):
@@ -120,18 +166,23 @@ def feedback(request):
         return redirect("/")
 
 
+@login_required
 def orderhistory(request):
-    if request.user.is_authenticated:
-        if Orders.objects.filter(userid_id=request.user.id).exists():
-            if Orders.objects.filter(userid_id=request.user.id,statusid_id='6'):
-                hist = Orders.objects.filter(userid_id=request.user.id,statusid_id='6').order_by('date')
-                return render(request,'orderhistory.html',{'hist':hist})
-            else:
-                return render(request,'orderhistory.html')
+    try:
+        # Get completed orders (status 6 = Completed)
+        completed_status = Status.objects.filter(status='Completed').first()
+        if completed_status:
+            hist = Orders.objects.filter(
+                userid=request.user, 
+                statusid=completed_status
+            ).order_by('-date')
         else:
-            return render(request,'orderhistory.html')
-    else:
-        return redirect("/")
+            hist = Orders.objects.none()
+        
+        return render(request, 'orderhistory.html', {'hist': hist})
+    except Exception as e:
+        logger.error(f'Order history error: {str(e)}')
+        return render(request, 'orderhistory.html', {'hist': Orders.objects.none()})
 
 def profileupdate(request):
     if request.user.is_authenticated:
@@ -155,18 +206,22 @@ def profileupdate(request):
         return redirect("/")
 
 
+@login_required
 def active(request):
-    if request.user.is_authenticated:
-        if Orders.objects.filter(userid_id=request.user.id).exists():
-            if Orders.objects.filter(userid_id=request.user.id).exclude(statusid_id='6'):
-                hist = Orders.objects.filter(userid_id=request.user.id).exclude(statusid_id='6')
-                return render(request,'active.html',{'hist':hist})
-            else:
-                return render(request,'active.html')
-
-        return render(request,'active.html')
-    else:
-        return redirect("/")
+    try:
+        # Get active orders (not completed)
+        completed_status = Status.objects.filter(status='Completed').first()
+        if completed_status:
+            hist = Orders.objects.filter(userid=request.user).exclude(
+                statusid=completed_status
+            ).order_by('-date')
+        else:
+            hist = Orders.objects.filter(userid=request.user).order_by('-date')
+        
+        return render(request, 'active.html', {'hist': hist})
+    except Exception as e:
+        logger.error(f'Active orders error: {str(e)}')
+        return render(request, 'active.html', {'hist': Orders.objects.none()})
 
 
 def changepassword(request):
@@ -217,8 +272,11 @@ def changepassword(request):
     else:
         return redirect("/")
 
+@login_required
 def adddetails(request):
-    if request.user.is_staff:
+    if not request.user.is_staff:
+        messages.error(request, 'Access denied')
+        return redirect('index')
         if request.POST.get('addclothtype'):
             clothtypes = request.POST['clothtype']
             c = ClothType.objects.create(clothtypes=clothtypes)
@@ -236,8 +294,11 @@ def adddetails(request):
     else:
         return redirect("/")
 
+@login_required
 def reports(request):
-    if request.user.is_staff:
+    if not request.user.is_staff:
+        messages.error(request, 'Access denied')
+        return redirect('index')
         if request.method == 'POST':
             fromdate=request.POST['fdate']
             todate=request.POST['tdate']
@@ -252,26 +313,47 @@ def reports(request):
         else:
             return render(request,'reports.html')
 
+@login_required
 def allreports(request):
-        if request.user.is_staff:
-            users = User.objects.filter(is_staff=False).count()
-            staffs = User.objects.filter(is_staff=True).count()
-            order = Orders.objects.count()
-            totalcost = Orders.objects.aggregate(Sum('totalcost'))
-            totc=list(totalcost.values())
-            for n in totc:
-                total_cost = n
-                print(total_cost)  
-                return render(request,'allreports.html',{'users':users,'staffs':staffs,'order':order,'totalcost':total_cost})
+    if not request.user.is_staff:
+        messages.error(request, 'Access denied')
+        return redirect('index')
+        
+    try:
+        users = User.objects.filter(is_staff=False).count()
+        staffs = User.objects.filter(is_staff=True).count()
+        order_count = Orders.objects.count()
+        totalcost_result = Orders.objects.aggregate(Sum('totalcost'))
+        total_cost = totalcost_result['totalcost__sum'] or 0
+        
+        context = {
+            'users': users,
+            'staffs': staffs,
+            'order': order_count,
+            'totalcost': total_cost
+        }
+        return render(request, 'allreports.html', context)
+    except Exception as e:
+        logger.error(f'All reports error: {str(e)}')
+        messages.error(request, 'Error generating reports')
+        return render(request, 'allreports.html', {
+            'users': 0, 'staffs': 0, 'order': 0, 'totalcost': 0
+        })
 
+@login_required
 def allorders(request):
-    if request.user.is_staff:
+    if not request.user.is_staff:
+        messages.error(request, 'Access denied')
+        return redirect('index')
         order=Orders.objects.all().order_by('date')
         return render(request,'allorders.html',{'order':order})
     
 
+@login_required
 def changestatus(request):
-    if request.user.is_staff:
+    if not request.user.is_staff:
+        messages.error(request, 'Access denied')
+        return redirect('index')
         if request.method == 'POST':
             status=request.POST.get('statusd')
             orderid=request.POST.get('update')
@@ -292,8 +374,11 @@ def changestatus(request):
 
 
 
+@login_required
 def adduser(request):
-    if request.user.is_staff:
+    if not request.user.is_staff:
+        messages.error(request, 'Access denied')
+        return redirect('index')
         if  request.method =='POST':
             fname = request.POST['fname']
             lname = request.POST['lname']
@@ -324,8 +409,11 @@ def adduser(request):
         return redirect("/")
 
 
+@login_required
 def adddiscound(request):
-    if request.user.is_staff:
+    if not request.user.is_staff:
+        messages.error(request, 'Access denied')
+        return redirect('index')
         if request.method =='POST':
             orderno = request.POST['ordernumber']
             discound = request.POST['discound']
@@ -339,15 +427,21 @@ def adddiscound(request):
         return redirect("/")
 
 
+@login_required
 def vfeedback(request):
-    if request.user.is_staff:
+    if not request.user.is_staff:
+        messages.error(request, 'Access denied')
+        return redirect('index')
         feed = Feedback.objects.all()
         return render(request,'vfeedback.html',{'feed':feed})
     else:
         return redirect("/")
 
+@login_required
 def unpaid(request):
-    if request.user.is_staff:
+    if not request.user.is_staff:
+        messages.error(request, 'Access denied')
+        return redirect('index')
         if request.method == 'POST':
             p="True"
             orderid=request.POST.get('update')
@@ -363,8 +457,11 @@ def unpaid(request):
         return redirect("/")
 
 
+@login_required
 def cdelivery(request):
-    if request.user.is_staff:
+    if not request.user.is_staff:
+        messages.error(request, 'Access denied')
+        return redirect('index')
         if Orders.objects.filter(homedelivery=True).exclude(statusid_id='6').exists():
             for ord in Orders.objects.filter(homedelivery=True).exclude(statusid_id='6'):
                 print('ord:',ord.userid_id)
