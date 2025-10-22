@@ -30,12 +30,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'ki-45px(3d%o(sxdd3(55@6uru6jxu27+d6n-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-# Get ALLOWED_HOSTS from environment variable or use defaults
-ALLOWED_HOSTS_ENV = os.environ.get('ALLOWED_HOSTS', '')
-if ALLOWED_HOSTS_ENV:
-    ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS_ENV.split(',') if host.strip()]
-else:
-    ALLOWED_HOSTS = ['*'] if DEBUG else ['washwish.onrender.com', '.onrender.com', 'localhost', '127.0.0.1']
+# ALLOWED_HOSTS configuration
+ALLOWED_HOSTS = ['washwish.onrender.com', '.onrender.com', 'localhost', '127.0.0.1', '*']
 
 # Logging configuration
 LOGGING = {
