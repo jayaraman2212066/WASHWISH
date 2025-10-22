@@ -277,6 +277,8 @@ def adddetails(request):
     if not request.user.is_staff:
         messages.error(request, 'Access denied')
         return redirect('index')
+    
+    if request.method == 'POST':
         if request.POST.get('addclothtype'):
             clothtypes = request.POST['clothtype']
             c = ClothType.objects.create(clothtypes=clothtypes)
@@ -290,28 +292,28 @@ def adddetails(request):
             s.save()
             messages.info(request,'Record added')
             return redirect('adddetails')
-        return render(request,'adddetails.html')
-    else:
-        return redirect("/")
+    
+    return render(request,'adddetails.html')
 
 @login_required
 def reports(request):
     if not request.user.is_staff:
         messages.error(request, 'Access denied')
         return redirect('index')
-        if request.method == 'POST':
-            fromdate=request.POST['fdate']
-            todate=request.POST['tdate']
-            s=0
-            if Orders.objects.filter(date__gte=fromdate,date__lte=todate).order_by('id'):
-                ord=Orders.objects.filter(date__gte=fromdate,date__lte=todate).order_by('id')
-                for orders in ord:
-                    s=s+orders.totalcost
-            order = Orders.objects.filter(date__gte=fromdate,date__lte=todate).order_by('id')
-            messages.info(request,'Report Generated')
-            return render(request,'reports.html',{'order':order,'s':s})
-        else:
-            return render(request,'reports.html')
+    
+    if request.method == 'POST':
+        fromdate=request.POST['fdate']
+        todate=request.POST['tdate']
+        s=0
+        if Orders.objects.filter(date__gte=fromdate,date__lte=todate).order_by('id'):
+            ord=Orders.objects.filter(date__gte=fromdate,date__lte=todate).order_by('id')
+            for orders in ord:
+                s=s+orders.totalcost
+        order = Orders.objects.filter(date__gte=fromdate,date__lte=todate).order_by('id')
+        messages.info(request,'Report Generated')
+        return render(request,'reports.html',{'order':order,'s':s})
+    else:
+        return render(request,'reports.html')
 
 @login_required
 def allreports(request):
@@ -345,8 +347,9 @@ def allorders(request):
     if not request.user.is_staff:
         messages.error(request, 'Access denied')
         return redirect('index')
-        order=Orders.objects.all().order_by('date')
-        return render(request,'allorders.html',{'order':order})
+    
+    order=Orders.objects.all().order_by('date')
+    return render(request,'allorders.html',{'order':order})
     
 
 @login_required
@@ -354,23 +357,22 @@ def changestatus(request):
     if not request.user.is_staff:
         messages.error(request, 'Access denied')
         return redirect('index')
-        if request.method == 'POST':
-            status=request.POST.get('statusd')
-            orderid=request.POST.get('update')
-            if Orders.objects.filter(id=orderid).exists():
-                order = Orders.objects.get(id=orderid)
-                order.statusid_id=status
-                order.save()
-                messages.info(request,'Status changed')
-                return redirect('changestatus')
-        elif Orders.objects.exclude(statusid='6'):
-            order = Orders.objects.exclude(statusid='6').order_by('id')
-            s=Status.objects.all()
-            return render(request,'changestatus.html',{'order':order,'s':s})
-        else:
-            return render(request,'changestatus.html')
+    
+    if request.method == 'POST':
+        status=request.POST.get('statusd')
+        orderid=request.POST.get('update')
+        if Orders.objects.filter(id=orderid).exists():
+            order = Orders.objects.get(id=orderid)
+            order.statusid_id=status
+            order.save()
+            messages.info(request,'Status changed')
+            return redirect('changestatus')
+    elif Orders.objects.exclude(statusid='6'):
+        order = Orders.objects.exclude(statusid='6').order_by('id')
+        s=Status.objects.all()
+        return render(request,'changestatus.html',{'order':order,'s':s})
     else:
-        return redirect("/")
+        return render(request,'changestatus.html')
 
 
 
@@ -379,34 +381,33 @@ def adduser(request):
     if not request.user.is_staff:
         messages.error(request, 'Access denied')
         return redirect('index')
-        if  request.method =='POST':
-            fname = request.POST['fname']
-            lname = request.POST['lname']
-            username = request.POST['username']
-            email = request.POST['email']
-            password = request.POST['password']
-            checks = request.POST.get('checks',False)
+    
+    if request.method =='POST':
+        fname = request.POST['fname']
+        lname = request.POST['lname']
+        username = request.POST['username']
+        email = request.POST['email']
+        password = request.POST['password']
+        checks = request.POST.get('checks',False)
 
-            if User.objects.filter(username=username).exists():
-                messages.info(request,'Username Taken')
-                return redirect('adduser')
-            elif User.objects.filter(email=email).exists():
-                messages.info(request,'Email Taken')
-                return redirect('adduser')
-            elif checks == 'True':
-                user = User.objects.create_user(username = username,  first_name = fname,  last_name = lname, password = password, email = email, is_staff = True)
-                user.save()
-                messages.info(request,'Staff Added')
-                return redirect('adduser')
-            else:
-                user = User.objects.create_user(username = username,  first_name = fname,  last_name = lname, password = password, email = email)
-                user.save()
-                messages.info(request,'User Added')
-                return redirect('adduser')
+        if User.objects.filter(username=username).exists():
+            messages.info(request,'Username Taken')
+            return redirect('adduser')
+        elif User.objects.filter(email=email).exists():
+            messages.info(request,'Email Taken')
+            return redirect('adduser')
+        elif checks == 'True':
+            user = User.objects.create_user(username = username,  first_name = fname,  last_name = lname, password = password, email = email, is_staff = True)
+            user.save()
+            messages.info(request,'Staff Added')
+            return redirect('adduser')
         else:
-            return render(request,'adduser.html')
+            user = User.objects.create_user(username = username,  first_name = fname,  last_name = lname, password = password, email = email)
+            user.save()
+            messages.info(request,'User Added')
+            return redirect('adduser')
     else:
-        return redirect("/")
+        return render(request,'adduser.html')
 
 
 @login_required
@@ -414,17 +415,16 @@ def adddiscound(request):
     if not request.user.is_staff:
         messages.error(request, 'Access denied')
         return redirect('index')
-        if request.method =='POST':
-            orderno = request.POST['ordernumber']
-            discound = request.POST['discound']
-            dis = Discounds.objects.create(discounds = discound,orders = orderno)
-            dis.save()
-            messages.info(request,'Discound Added')
-            return redirect('adddiscound')
-        else:
-            return render(request,'adddiscound.html')
+    
+    if request.method =='POST':
+        orderno = request.POST['ordernumber']
+        discound = request.POST['discound']
+        dis = Discounds.objects.create(discounds = discound,orders = orderno)
+        dis.save()
+        messages.info(request,'Discound Added')
+        return redirect('adddiscound')
     else:
-        return redirect("/")
+        return render(request,'adddiscound.html')
 
 
 @login_required
@@ -432,29 +432,28 @@ def vfeedback(request):
     if not request.user.is_staff:
         messages.error(request, 'Access denied')
         return redirect('index')
-        feed = Feedback.objects.all()
-        return render(request,'vfeedback.html',{'feed':feed})
-    else:
-        return redirect("/")
+    
+    feed = Feedback.objects.all()
+    return render(request,'vfeedback.html',{'feed':feed})
 
 @login_required
 def unpaid(request):
     if not request.user.is_staff:
         messages.error(request, 'Access denied')
         return redirect('index')
-        if request.method == 'POST':
-            p="True"
-            orderid=request.POST.get('update')
-            if Payment.objects.filter(orderid_id=orderid).exists():
-                pay = Payment.objects.get(orderid_id=orderid)
-                pay.payed=p
-                pay.save()
-                messages.info(request,'Status changed')
-                return redirect('unpaid')
-        pay = Payment.objects.all().exclude(payed=True)
-        return render(request,'unpaid.html',{'pay':pay})
-    else:
-        return redirect("/")
+    
+    if request.method == 'POST':
+        p="True"
+        orderid=request.POST.get('update')
+        if Payment.objects.filter(orderid_id=orderid).exists():
+            pay = Payment.objects.get(orderid_id=orderid)
+            pay.payed=p
+            pay.save()
+            messages.info(request,'Status changed')
+            return redirect('unpaid')
+    
+    pay = Payment.objects.all().exclude(payed=True)
+    return render(request,'unpaid.html',{'pay':pay})
 
 
 @login_required
@@ -462,13 +461,12 @@ def cdelivery(request):
     if not request.user.is_staff:
         messages.error(request, 'Access denied')
         return redirect('index')
-        if Orders.objects.filter(homedelivery=True).exclude(statusid_id='6').exists():
-            for ord in Orders.objects.filter(homedelivery=True).exclude(statusid_id='6'):
-                print('ord:',ord.userid_id)
-                addid=ord.userid_id
-                add = Address.objects.get(userid_id=addid)
-                return render(request,'cdelivery.html',{'ord':ord,'add':add})
-        else:
-            return render(request,'cdelivery.html')
+    
+    if Orders.objects.filter(homedelivery=True).exclude(statusid_id='6').exists():
+        for ord in Orders.objects.filter(homedelivery=True).exclude(statusid_id='6'):
+            print('ord:',ord.userid_id)
+            addid=ord.userid_id
+            add = Address.objects.get(userid_id=addid)
+            return render(request,'cdelivery.html',{'ord':ord,'add':add})
     else:
-        return redirect("/")
+        return render(request,'cdelivery.html')
