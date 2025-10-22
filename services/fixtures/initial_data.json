@@ -1,0 +1,118 @@
+[
+  {
+    "model": "services.clothtype",
+    "pk": 1,
+    "fields": {
+      "clothtypes": "Shirts"
+    }
+  },
+  {
+    "model": "services.clothtype",
+    "pk": 2,
+    "fields": {
+      "clothtypes": "Pants"
+    }
+  },
+  {
+    "model": "services.clothtype",
+    "pk": 3,
+    "fields": {
+      "clothtypes": "Dresses"
+    }
+  },
+  {
+    "model": "services.clothtype",
+    "pk": 4,
+    "fields": {
+      "clothtypes": "Jackets"
+    }
+  },
+  {
+    "model": "services.clothtype",
+    "pk": 5,
+    "fields": {
+      "clothtypes": "Bedsheets"
+    }
+  },
+  {
+    "model": "services.clothtype",
+    "pk": 6,
+    "fields": {
+      "clothtypes": "Towels"
+    }
+  },
+  {
+    "model": "services.servicetype",
+    "pk": 1,
+    "fields": {
+      "servicetypes": "Dry Cleaning",
+      "price": 50
+    }
+  },
+  {
+    "model": "services.servicetype",
+    "pk": 2,
+    "fields": {
+      "servicetypes": "Washing",
+      "price": 30
+    }
+  },
+  {
+    "model": "services.servicetype",
+    "pk": 3,
+    "fields": {
+      "servicetypes": "Ironing",
+      "price": 20
+    }
+  },
+  {
+    "model": "services.servicetype",
+    "pk": 4,
+    "fields": {
+      "servicetypes": "Folding",
+      "price": 15
+    }
+  },
+  {
+    "model": "services.status",
+    "pk": 1,
+    "fields": {
+      "status": "Received"
+    }
+  },
+  {
+    "model": "services.status",
+    "pk": 2,
+    "fields": {
+      "status": "In Progress"
+    }
+  },
+  {
+    "model": "services.status",
+    "pk": 3,
+    "fields": {
+      "status": "Washing"
+    }
+  },
+  {
+    "model": "services.status",
+    "pk": 4,
+    "fields": {
+      "status": "Drying"
+    }
+  },
+  {
+    "model": "services.status",
+    "pk": 5,
+    "fields": {
+      "status": "Ironing"
+    }
+  },
+  {
+    "model": "services.status",
+    "pk": 6,
+    "fields": {
+      "status": "Completed"
+    }
+  }
+]
