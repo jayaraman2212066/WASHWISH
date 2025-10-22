@@ -142,22 +142,24 @@ input[type=number] {
                 <tbody>
                     <tr>
                         
-                        <td style="width:70px;">
-							<select class="form-select" name="clothtype" aria-label="" style="">
-							    <option selected>Choose Clothtype</option>
+                        <td style="width:200px;">
+							<select class="form-control" name="clothtype" required style="width:180px;">
+							    <option value="">Choose Clothtype</option>
                                 {% for clothes in ctypes %}
                                 <option value="{{clothes.clothtypes}}">{{clothes.clothtypes}}</option>
                                 {%endfor%}
 							</select>
+                            <small>Available: {{ ctypes.count }} types</small>
 						</td>
                         <td><input type="number" style="width:50px;margin-top:9px;" name="noofclothes" required></td>
-                        <td style="width:70px;">
-							<select class="form-select" aria-label="" name="servicetype" style="">
-							    <option selected>Choose Services</option>
+                        <td style="width:200px;">
+							<select class="form-control" name="servicetype" required style="width:180px;">
+							    <option value="">Choose Services</option>
                                 {% for services in stypes %}
-                                <option value="{{services.id}}">{{services.servicetypes}}</option>
+                                <option value="{{services.id}}">{{services.servicetypes}} - ₹{{services.price}}</option>
                                 {%endfor%}
 							</select>
+                            <small>Available: {{ stypes.count }} services</small>
 						</td>
                     </tr>
                     
@@ -167,10 +169,10 @@ input[type=number] {
                     	
                     <td>
                     <label style="color:red;font-size:14px;">+ Rs 50 for home delivey</label>
-						<select class="form-select" name="delivery" style="width: 80px !important; min-width: 80px; max-width: 80px;" aria-label="" id="slct" onchange="javascript: showhide();" required>
-							<option selected>Delivery Options</option>
-							<option value="False">Pickfrom store</option>
-							<option value="True" >Home delivery</option> <br>
+						<select class="form-control" name="delivery" style="width: 150px;" id="slct" onchange="javascript: showhide();" required>
+							<option value="">Delivery Options</option>
+							<option value="False">Pick from store</option>
+							<option value="True">Home delivery (+₹50)</option>
 							
 						</select>
                         <br>
