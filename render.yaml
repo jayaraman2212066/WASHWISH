@@ -20,7 +20,7 @@ services:
           name: washwish-db
           property: connectionString
       - key: ALLOWED_HOSTS
-        value: "*"
+        value: "washwish.onrender.com,localhost,127.0.0.1"
 
 databases:
   - name: washwish-db
