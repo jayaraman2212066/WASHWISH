@@ -4,5 +4,6 @@ def contact_info(request):
     return {
         'contact_name': 'Jayaraman K',
         'contact_email': 'jayaramankalidasan@gmail.com',
-        'contact_phone': '+91 6369804386'
+        'contact_phone': '+91 6369804386',
+        'contact_location': 'India, Tamil Nadu, Chennai'
     }

@@ -283,7 +283,8 @@ WHITENOISE_ADD_HEADERS_TO_STATIC_ONLY = True
 CONTACT_INFO = {
     'name': 'Jayaraman K',
     'email': 'jayaramankalidasan@gmail.com',
-    'phone': '+91 6369804386'
+    'phone': '+91 6369804386',
+    'location': 'India, Tamil Nadu, Chennai'
 }
 
 
